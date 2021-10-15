@@ -20,14 +20,17 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/3.2/howto/deployment/checklist/
 
+
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = 'django-insecure-d2x+#lnn)&qdvi*dr4_a#7%m0i)=a9d-^2^u^8bz_85@c4p+vq'
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['127.0.0.1', '.cfe.sh']
+LOGIN_URL = "/login"
 
+MAX_TWEET_LENGTH = 240
 
 # Application definition
 
@@ -38,7 +41,9 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-
+    # third-party
+    'rest_framework',
+    # internal
     'tweets',
 ]
 

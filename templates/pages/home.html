@@ -11,33 +11,104 @@ This is amazing!!!
     </div>
 </div>
 
+<div class='row my-3'>
+    <div class="col-md-4 mx-auto col-10">
+        <form class="form" method="POST" id="tweet-create-form" action='create-tweet/'>
+            {% csrf_token %}
+            <div class="d-none alert alert-danger" id="tweet-create-form-error"></div>
+            <input type='hidden' value="/" name='next'/>
+            <textarea required="required" class="form-control" name='content' placeholder="글을 작성하세요"></textarea>
+            <button type="submit" class="btn btn-primary">Tweet</button>
+        </form>
+    </div>
+</div>
+
 <div class="row" id="tweets">
     Loading...
 </div>
 
 <script>
-    const tweetsElement = document.getElementById("tweets")
-    const xhr = new XMLHttpRequest() // xhr = SomeClass()
-    const method = 'GET' // "POST"
-    const url = '/tweets'
-    const responseType = 'json'
-
-    xhr.responseType = responseType
-    xhr.open(method, url) 
-    xhr.onload = function() {
-        const serverResponse = xhr.response
-        var listedItems = serverResponse.response // array
-        var finalTweetStr = ""
-        for (var i=0 ; i < listedItems.length; i++){
-            var tweetObj = listedItems[i]
-            finalTweetStr += formatTweetElement(tweetObj)
+    function handleTweetFormError(msg, display) {
+        var myErrorDiv = document.getElementById("tweet-create-form-error")
+        if (display === true) {
+            // show error
+            myErrorDiv.setAttribute("class", "d-block alert alert-danger")
+            myErrorDiv.innerText = msg
+        }else {
+            // hide error
+            myErrorDiv.setAttribute("class", "d-none alert alert-danger")
         }
-        tweetsElement.innerHTML = finalTweetStr
     }
-    xhr.send()
+
+    function handleTweetCreateFormDidSubmit(event) {
+        event.preventDefault()
+        const tweetCreateForm = event.target
+        const tweetCreateFormData = new FormData(tweetCreateForm)
+        const url = tweetCreateForm.getAttribute("action")
+        const method = tweetCreateForm.getAttribute("method")
+        const responseType = "json"
+        const xhr = new XMLHttpRequest()
+        xhr.responseType = responseType
+        xhr.open(method, url) 
+        xhr.setRequestHeader("HTTP_X_REQUESTED_WITH", "XMLHttpRequest") // ajax 를 사용하기 위한 세팅1
+        xhr.setRequestHeader("X-Requested-With", "XMLHttpRequest")      // ajax 를 사용하기 위한 세팅2
+        xhr.onload = function() {
+            if (xhr.status === 201) {
+                handleTweetFormError("", false)
+                const newTweetJson = xhr.response
+                const newTweetEl = formatTweetElement(newTweetJson)
+                const ogHtml = tweetsContainerElement.innerHTML
+                tweetsContainerElement.innerHTML = newTweetEl +  ogHtml
+                tweetCreateForm.reset()
+            }else if (xhr.status === 400){
+                const errorJson = xhr.response
+                const contentError = errorJson.content
+                let contentErrorMsg;
+                if (contentError) {
+                    contentErrorMsg = contentError[0]
+                    if (contentErrorMsg) {
+                        handleTweetFormError(contentErrorMsg, true)
+                    }else {
+                        alert("오류가 발생했습니다. 다시 시도해 주세요.")
+                    }
+                }else{
+                    alert("오류가 발생했습니다. 다시 시도해 주세요.")
+                }
+            }else if (xhr.status === 401){
+                alert("로그인 후 사용하십시오.")
+                window.location.href = "/login"
+            }else if (xhr.status === 500){
+                alert("서버 오류가 있습니다. 다시 시도해 주세요.")
+            }
+        }
+        xhr.onerror = function(){
+            alert("오류가 발생했습니다. 다시 시도해 주세요.")
+        }
+        xhr.send(tweetCreateFormData)
+    }
+    
+    function loadTweets(tweetsElement) {
+        const xhr = new XMLHttpRequest() // xhr = SomeClass()
+        const method = 'GET' // "POST"
+        const url = '/tweets'
+        const responseType = 'json'
+    
+        xhr.responseType = responseType
+        xhr.open(method, url) 
+        xhr.onload = function() {
+            const serverResponse = xhr.response
+            var listedItems = serverResponse.response // array
+            var finalTweetStr = ""
+            for (var i=0 ; i < listedItems.length; i++){
+                var tweetObj = listedItems[i]
+                finalTweetStr += formatTweetElement(tweetObj)
+            }
+            tweetsElement.innerHTML = finalTweetStr
+        }
+        xhr.send()
+    }
 
     function handleDidLike(tweet_id, currentCount) {
-        console.log(tweet_id, currentCount)
         currentCount++
         return
     }
@@ -53,5 +124,12 @@ This is amazing!!!
                             +"</div>"
         return formattedTweet
     }
+
+
+    const tweetsContainerElement = document.getElementById("tweets")
+    loadTweets(tweetsContainerElement)
+    const tweetCreateFormEl = document.getElementById("tweet-create-form")
+    tweetCreateFormEl.addEventListener("submit", handleTweetCreateFormDidSubmit) 
+
 </script>
 {% endblock content %}
