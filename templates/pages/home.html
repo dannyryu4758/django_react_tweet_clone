@@ -1,0 +1,57 @@
+{% extends 'base.html' %}
+
+{% block head_title %}
+This is amazing!!!
+{% endblock head_title%}
+
+{% block content %}
+<div class="row text-center">
+    <div class="col">
+        <h1>Welcome to Tweetme2</h1>
+    </div>
+</div>
+
+<div class="row" id="tweets">
+    Loading...
+</div>
+
+<script>
+    const tweetsElement = document.getElementById("tweets")
+    const xhr = new XMLHttpRequest() // xhr = SomeClass()
+    const method = 'GET' // "POST"
+    const url = '/tweets'
+    const responseType = 'json'
+
+    xhr.responseType = responseType
+    xhr.open(method, url) 
+    xhr.onload = function() {
+        const serverResponse = xhr.response
+        var listedItems = serverResponse.response // array
+        var finalTweetStr = ""
+        for (var i=0 ; i < listedItems.length; i++){
+            var tweetObj = listedItems[i]
+            finalTweetStr += formatTweetElement(tweetObj)
+        }
+        tweetsElement.innerHTML = finalTweetStr
+    }
+    xhr.send()
+
+    function handleDidLike(tweet_id, currentCount) {
+        console.log(tweet_id, currentCount)
+        currentCount++
+        return
+    }
+
+    function likeBtn(tweet) {
+        return "<button class='btn btn-primary btn-sm' onclick=handleDidLike(" + tweet.id + "," + tweet.likes + ")>" + tweet.likes + " Like</button>"
+    }
+
+    function formatTweetElement(tweet) {
+        var formattedTweet = "<div class='col-12 col-md-10 mx-auto border border-rounded py-3 mb-4 tweet' id='tweet-"+ tweet.id +"'>"
+                                + "<p>" + tweet.content + "</p>"
+                                +"<div class='btn-group'>" + likeBtn(tweet) + "</div>"
+                            +"</div>"
+        return formattedTweet
+    }
+</script>
+{% endblock content %}
