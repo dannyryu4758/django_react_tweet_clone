@@ -29,7 +29,8 @@ SECRET_KEY = 'django-insecure-d2x+#lnn)&qdvi*dr4_a#7%m0i)=a9d-^2^u^8bz_85@c4p+vq
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['127.0.0.1', '.cfe.sh']
+ALLOWED_HOSTS = ['127.0.0.1', '.cfe.sh', 'localhost']
+# ALLOWED_HOSTS = ['*']
 LOGIN_URL = "/login"
 TWEET_ACTION_OPTIONS = ["like", "unlike", "retweet"]
 
@@ -45,6 +46,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     # third-party
+    "corsheaders",
     'rest_framework',
     # internal
     'tweets',
@@ -53,6 +55,7 @@ INSTALLED_APPS = [
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
+    "corsheaders.middleware.CorsMiddleware",
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
@@ -131,6 +134,9 @@ STATIC_URL = '/static/'
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/3.2/ref/settings/#default-auto-field
+
+CORS_ALLOW_ALL_ORIGINS = True # any website has access to my api
+CORS_URLS_REGEX = r"^/api/.*$"
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
