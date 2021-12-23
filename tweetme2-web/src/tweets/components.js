@@ -3,11 +3,14 @@ import { loadTweets } from "../lookup";
 
 export function TweetsComponent(props) {
   const textAreaRef = React.createRef();
+  const [newTweets, setNewTweets] = useState([]);
   const handleSubmit = (event) => {
     event.preventDefault();
-    console.log(event);
     const newVal = textAreaRef.current.value;
-    console.log(newVal);
+    let tempNewTweets = [...newTweets];
+    // 서버에서 데이터 불러오는 방식으로 변경 예정
+    tempNewTweets.unshift({ content: newVal, likes: 0, id: 12312 });
+    setNewTweets(tempNewTweets);
     textAreaRef.current.value = "";
   };
   return (
@@ -24,19 +27,26 @@ export function TweetsComponent(props) {
           </button>
         </form>
       </div>
-      <TweetsList />
+      <TweetsList newTweets={newTweets} />
     </div>
   );
 }
 
 export function TweetsList(props) {
+  const [tweetsInit, setTweetsInit] = useState([]);
   const [tweets, setTweets] = useState([]);
+  useEffect(() => {
+    let final = [...props.newTweets].concat(tweetsInit);
+    if (final.length !== tweets.length) {
+      setTweets(final);
+    }
+  }, [props.newTweets, tweets, tweetsInit]);
 
   useEffect(() => {
     const myCallback = (response, status) => {
       console.log(response, status);
       if (status === 200) {
-        setTweets(response);
+        setTweetsInit(response);
       } else {
         alert("오류가 있습니다.");
       }
