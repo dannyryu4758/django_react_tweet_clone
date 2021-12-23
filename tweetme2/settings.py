@@ -135,8 +135,14 @@ STATIC_URL = '/static/'
 # Default primary key field type
 # https://docs.djangoproject.com/en/3.2/ref/settings/#default-auto-field
 
-CORS_ALLOW_ALL_ORIGINS = True # any website has access to my api
-CORS_URLS_REGEX = r"^/api/.*$"
+
+
+
+CORS_ALLOW_ALL_ORIGINS = True # 다른 사이트에서 장고 사이트를 접속할 수 있도록 세팅
+CORS_URLS_REGEX = r"^/api/.*$" # 해당 경로로 들어오는 경우 접속 승인
+
+
+
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
