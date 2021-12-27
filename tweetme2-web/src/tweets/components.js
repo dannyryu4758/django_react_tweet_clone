@@ -4,21 +4,24 @@ import { createTweet, loadTweets } from "../lookup";
 export function TweetsComponent(props) {
   const textAreaRef = React.createRef();
   const [newTweets, setNewTweets] = useState([]);
+
+  const handleBackendUpdate = (response, status) => {
+    // backend api response handler
+    let tempNewTweets = [...newTweets];
+    if (status === 201) {
+      tempNewTweets.unshift(response);
+      setNewTweets(tempNewTweets);
+    } else {
+      console.log(response);
+      alert("오류가 발생했습니다. 다시 시도하세요.");
+    }
+  };
+
   const handleSubmit = (event) => {
+    // backend api request
     event.preventDefault();
     const newVal = textAreaRef.current.value;
-    let tempNewTweets = [...newTweets];
-    // 서버에서 데이터 불러오는 방식으로 변경 예정
-    createTweet(newVal, (response, status) => {
-      if (status === 201) {
-        tempNewTweets.unshift(response);
-      } else {
-        console.log(response);
-        alert("오류가 발생했습니다. 다시 시도하세요.");
-      }
-    });
-    // tempNewTweets.unshift({ content: newVal, likes: 0, id: 12312 });
-    setNewTweets(tempNewTweets);
+    createTweet(newVal, handleBackendUpdate);
     textAreaRef.current.value = "";
   };
   return (
