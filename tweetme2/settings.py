@@ -132,6 +132,18 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 
+# <React 화면 연동>
+# 1. npm rum build
+# 2. react_app build 폴더 static 폴더를 django 최상위에 복사
+STATICFILES_DIRS = [
+    os.path.join(BASE_DIR, "static")
+]
+# 3. make dir static-root
+# 4. ./manage.py collectstatic
+STATIC_ROOT = os.path.join(BASE_DIR, "static-root")
+# 5. react_app build 폴더 내 index.html을 복사하여 django template에 react 화면용 html 만들고 복붙
+
+
 # Default primary key field type
 # https://docs.djangoproject.com/en/3.2/ref/settings/#default-auto-field
 
