@@ -16,7 +16,7 @@ function getCookie(name) {
   return cookieValue;
 }
 
-function lookup(method, endpoint, callback, data) {
+export function backendLookup(method, endpoint, callback, data) {
   let jsonData;
   if (data) {
     jsonData = JSON.stringify(data);
@@ -40,26 +40,4 @@ function lookup(method, endpoint, callback, data) {
     callback({ message: "해당 요청은 오류가 있습니다." }, 400);
   };
   xhr.send(jsonData);
-}
-
-export function createTweet(newTweet, callback) {
-  lookup("POST", "/tweets/create/", callback, { content: newTweet });
-}
-
-export function loadTweets(callback) {
-  lookup("GET", "/tweets/", callback);
-  //   const xhr = new XMLHttpRequest(); // xhr = SomeClass()
-  //   const method = "GET"; // "POST"
-  //   const url = "http://localhost:8000/api/tweets/";
-  //   const responseType = "json";
-  //   xhr.responseType = responseType;
-  //   xhr.open(method, url);
-  //   xhr.onload = function () {
-  //     callback(xhr.response, xhr.status);
-  //   };
-  //   xhr.onerror = function (e) {
-  //     console.log(e);
-  //     callback({ message: "해당 요청은 오류가 있습니다." }, 400);
-  //   };
-  //   xhr.send();
 }
