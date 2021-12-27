@@ -12,6 +12,7 @@ https://docs.djangoproject.com/en/3.2/ref/settings/
 
 import os
 from pathlib import Path
+from corsheaders.defaults import default_headers
 
 import rest_framework
 
@@ -29,7 +30,7 @@ SECRET_KEY = 'django-insecure-d2x+#lnn)&qdvi*dr4_a#7%m0i)=a9d-^2^u^8bz_85@c4p+vq
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['127.0.0.1', '.cfe.sh', 'localhost']
+ALLOWED_HOSTS = ['127.0.0.1', '.cfe.sh', 'localhost', '127.0.0.1:3000', '127.0.0.1:8000']
 # ALLOWED_HOSTS = ['*']
 LOGIN_URL = "/login"
 TWEET_ACTION_OPTIONS = ["like", "unlike", "retweet"]
@@ -148,12 +149,9 @@ STATIC_ROOT = os.path.join(BASE_DIR, "static-root")
 # https://docs.djangoproject.com/en/3.2/ref/settings/#default-auto-field
 
 
-
-
 CORS_ALLOW_ALL_ORIGINS = True # 다른 사이트에서 장고 사이트를 접속할 수 있도록 세팅
 CORS_URLS_REGEX = r"^/api/.*$" # 해당 경로로 들어오는 경우 접속 승인
-
-
+CORS_ALLOW_HEADERS = default_headers + ( 'HTTP_X_REQUESTED_WITH','X-CSRFToken', )
 
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
