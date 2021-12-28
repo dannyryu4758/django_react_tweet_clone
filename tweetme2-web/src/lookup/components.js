@@ -33,10 +33,19 @@ export function backendLookup(method, endpoint, callback, data) {
   }
 
   xhr.onload = function () {
+    if (xhr.status === 403) {
+      const detail = xhr.response.detail;
+      if (
+        detail ===
+        "자격 인증데이터(authentication credentials)가 제공되지 않았습니다."
+      ) {
+        window.location.href = "/login?showLoginRequired=true";
+      }
+    }
     callback(xhr.response, xhr.status);
   };
   xhr.onerror = function (e) {
-    console.log(e);
+    // console.log("error", e);
     callback({ message: "해당 요청은 오류가 있습니다." }, 400);
   };
   xhr.send(jsonData);
