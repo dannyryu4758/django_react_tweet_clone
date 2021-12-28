@@ -1,6 +1,17 @@
 import React, { useState } from "react";
 import { ActionBtn } from "./button";
-import { ParentTweet } from "./components";
+
+export function ParentTweet(props) {
+  const { tweet } = props;
+  return tweet.parent ? (
+    <div className="row">
+      <div className="col-11 mx-auto p-3 border rounded">
+        <p className="mb-0 text-muted small">Retweet</p>
+        <Tweet hideActions className={" "} tweet={tweet.parent} />
+      </div>
+    </div>
+  ) : null;
+}
 
 export function Tweet(props) {
   const { tweet, didRetweet, hideActions } = props;

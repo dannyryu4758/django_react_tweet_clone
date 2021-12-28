@@ -10,7 +10,7 @@ export function apiTweetAction(tweetId, action, callback) {
 }
 
 export function apiTweeDetail(tweetId, callback) {
-  backendLookup("GET", `/tweets/?username=${tweetId}/`, callback);
+  backendLookup("GET", `/tweets/${tweetId}/`, callback);
 }
 
 export function apiTweetList(username, callback) {

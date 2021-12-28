@@ -1,7 +1,8 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { TweetsList } from "./list";
-import { Tweet } from "./detail";
 import { TweetCreate } from "./create";
+import { apiTweeDetail } from "./lookup";
+import { Tweet } from "./detail";
 
 export function TweetsComponent(props) {
   const [newTweets, setNewTweets] = useState([]);
@@ -23,14 +24,24 @@ export function TweetsComponent(props) {
   );
 }
 
-export function ParentTweet(props) {
-  const { tweet } = props;
-  return tweet.parent ? (
-    <div className="row">
-      <div className="col-11 mx-auto p-3 border rounded">
-        <p className="mb-0 text-muted small">Retweet</p>
-        <Tweet hideActions className={" "} tweet={tweet.parent} />
-      </div>
-    </div>
-  ) : null;
+export function TweetDetailComponent(props) {
+  const { tweetId } = props;
+  const [didLookup, setDidLookup] = useState(false);
+  const [tweet, setTweet] = useState(null);
+  const handleBackendLookup = (response, status) => {
+    if (status === 200) {
+      setTweet(response);
+    } else {
+      alert("해당 트윗을 찾는 도중 오류가 발생하였습니다.");
+    }
+  };
+  useEffect(() => {
+    if (didLookup === false) {
+      apiTweeDetail(tweetId, handleBackendLookup);
+      setDidLookup(true);
+    }
+  }, [tweetId, didLookup, setDidLookup]);
+  return tweet === null ? null : (
+    <Tweet tweet={tweet} className={props.className} />
+  );
 }
