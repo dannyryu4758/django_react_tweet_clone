@@ -1,5 +1,5 @@
 <form method='POST'>
     {% csrf_token %}
     {{ form.as_p }}
-    <button type="submit" class="btn btn-secondary">저장</button>
+    <button type="submit" class="btn btn-secondary">{% if btn_label %}{{ btn_label }}{% else %}저장{% endif %}</button>
 </form>

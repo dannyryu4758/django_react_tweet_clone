@@ -20,6 +20,11 @@ from django.contrib import admin
 from django.urls import path
 from django.urls.conf import include
 from django.views.generic import TemplateView
+from accounts.views import (
+    login_view,
+    logout_view,
+    register_view
+)
 
 from tweets.views import (
         tweets_list_view,
@@ -30,6 +35,9 @@ from tweets.views import (
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', tweets_list_view),
+    path('login/', login_view),
+    path('logout/', logout_view),
+    path('register/', register_view),
     path('<int:tweet_id>/', tweets_detail_view),
     path('profile/<str:username>/', tweets_profile_view),
     path("api/tweets/", include('tweets.api.urls')),
