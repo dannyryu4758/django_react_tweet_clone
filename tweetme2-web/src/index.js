@@ -9,9 +9,12 @@ const appEl = document.getElementById("root");
 if (appEl) {
   ReactDOM.render(<App />, appEl);
 }
+
+const e = React.createElement;
 const tweetEl = document.getElementById("tweetme-2");
 if (tweetEl) {
-  ReactDOM.render(<TweetsComponent />, tweetEl);
+  console.log(tweetEl.dataset);
+  ReactDOM.render(e(TweetsComponent, tweetEl.dataset), tweetEl);
 }
 
 // ReactDOM.render(
