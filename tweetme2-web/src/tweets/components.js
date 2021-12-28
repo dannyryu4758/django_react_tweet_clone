@@ -6,6 +6,8 @@ export function TweetsComponent(props) {
   const textAreaRef = React.createRef();
   const [newTweets, setNewTweets] = useState([]);
 
+  const canTweet = props.canTweet === "false" ? false : true;
+  console.log(canTweet === false);
   const handleBackendUpdate = (response, status) => {
     // backend api response handler
     let tempNewTweets = [...newTweets];
@@ -27,20 +29,22 @@ export function TweetsComponent(props) {
   };
   return (
     <div className={props.className}>
-      <div className="col-12 mb-3">
-        <form onSubmit={handleSubmit}>
-          <textarea
-            ref={textAreaRef}
-            required={true}
-            className="form-control"
-            name="tweet"
-          ></textarea>
-          <button type="submit" className="btn btn-primary my-3">
-            Tweet
-          </button>
-        </form>
-      </div>
-      <TweetsList newTweets={newTweets} />
+      {canTweet === true && (
+        <div className="col-12 mb-3">
+          <form onSubmit={handleSubmit}>
+            <textarea
+              ref={textAreaRef}
+              required={true}
+              className="form-control"
+              name="tweet"
+            ></textarea>
+            <button type="submit" className="btn btn-primary my-3">
+              Tweet
+            </button>
+          </form>
+        </div>
+      )}
+      <TweetsList newTweets={newTweets} {...props} />
     </div>
   );
 }
@@ -66,9 +70,9 @@ export function TweetsList(props) {
           alert("오류가 있습니다.");
         }
       };
-      apiTweetList(handleTweetListLookup);
+      apiTweetList(props.username, handleTweetListLookup);
     }
-  }, [tweetsInit, tweetsDidSet, setTweetsDidSet]);
+  }, [tweetsInit, tweetsDidSet, setTweetsDidSet, props.username]);
 
   const handleDidRetweet = (newTweet) => {
     const updateTweetsInit = [...tweetsInit];
