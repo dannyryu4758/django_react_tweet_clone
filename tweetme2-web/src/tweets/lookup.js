@@ -5,13 +5,10 @@ export function apiTweetCreate(newTweet, callback) {
 }
 
 export function apiTweetAction(tweetId, action, callback) {
-  const data = {
-    id: tweetId,
-    action: action,
-  };
+  const data = { id: tweetId, action: action };
   backendLookup("POST", "/tweets/action/", callback, data);
 }
 
-export function apiTweetLIst(callback) {
+export function apiTweetList(callback) {
   backendLookup("GET", "/tweets/", callback);
 }

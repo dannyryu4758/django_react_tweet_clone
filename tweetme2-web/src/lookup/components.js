@@ -1,11 +1,9 @@
-import React from "react";
-
 function getCookie(name) {
-  let cookieValue = null;
+  var cookieValue = null;
   if (document.cookie && document.cookie !== "") {
-    const cookies = document.cookie.split(";");
-    for (let i = 0; i < cookies.length; i++) {
-      const cookie = cookies[i].trim();
+    var cookies = document.cookie.split(";");
+    for (var i = 0; i < cookies.length; i++) {
+      var cookie = cookies[i].trim();
       // Does this cookie string begin with the name we want?
       if (cookie.substring(0, name.length + 1) === name + "=") {
         cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
@@ -24,14 +22,16 @@ export function backendLookup(method, endpoint, callback, data) {
   const xhr = new XMLHttpRequest(); // xhr = SomeClass()
   const url = `http://localhost:8000/api${endpoint}`;
   xhr.responseType = "json";
-  xhr.open(method, url);
   const csrftoken = getCookie("csrftoken");
+  xhr.open(method, url);
   xhr.setRequestHeader("Content-Type", "application/json");
+
   if (csrftoken) {
     xhr.setRequestHeader("HTTP_X_REQUESTED_WITH", "XMLHttpRequest"); // ajax 를 사용하기 위한 세팅1
     xhr.setRequestHeader("X-Requested-With", "XMLHttpRequest"); // ajax 를 사용하기 위한 세팅2
     xhr.setRequestHeader("X-CSRFToken", csrftoken); // ajax Cross Site Request Forgery protection
   }
+
   xhr.onload = function () {
     callback(xhr.response, xhr.status);
   };
