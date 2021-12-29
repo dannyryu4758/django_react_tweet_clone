@@ -96,8 +96,6 @@ def tweet_action_view(request, *args, **kwargs):
 def get_paginated_queryset_response(qs, request) :
     paginator = PageNumberPagination()
     paginator.page_size = 20
-    user = request.user
-    qs = Tweet.objects.feed(user)
     paginator_qs = paginator.paginate_queryset(qs, request)
     serializer = TweetSerializer(paginator_qs, many=True)
     return paginator.get_paginated_response(serializer.data)
@@ -115,14 +113,10 @@ def tweet_list_view(request, *args, **kwargs):
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
 def tweet_feed_view(request, *args, **kwargs):
-    paginator = PageNumberPagination()
-    paginator.page_size = 20
     user = request.user
     qs = Tweet.objects.feed(user)
-    paginator_qs = paginator.paginate_queryset(qs, request)
-    serializer = TweetSerializer(paginator_qs, many=True)
     # return Response(serializer.data, status=200)
-    return paginator.get_paginated_response(serializer.data)
+    return get_paginated_queryset_response(qs, request)
 
 
 def tweet_create_view_pure_django(request, *args, **kwargs):
