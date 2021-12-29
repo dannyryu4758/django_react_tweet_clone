@@ -37,6 +37,24 @@ export function TweetsList(props) {
     updateFinalTweets.unshift(tweets);
     setTweets(updateFinalTweets);
   };
+
+  const handleLoadNext = (event) => {
+    event.preventDefault();
+    if (nextUrl !== null) {
+      const handleLoadNextRespones = (response, status) => {
+        if (status === 200) {
+          setNextUrl(response.next);
+          const newTweets = [...tweets].concat(response.results);
+          setTweetsInit(newTweets);
+          setTweets(newTweets);
+        } else {
+          alert("오류가 있습니다.");
+        }
+      };
+      apiTweetList(props.username, handleLoadNextRespones, nextUrl);
+    }
+  };
+
   return (
     <React.Fragment>
       {tweets.map((item, index) => {
@@ -50,7 +68,9 @@ export function TweetsList(props) {
         );
       })}
       {nextUrl !== null && (
-        <button className="btn btn-outline-primary">Load Next</button>
+        <button onClick={handleLoadNext} className="btn btn-outline-primary">
+          Load Next
+        </button>
       )}
     </React.Fragment>
   );

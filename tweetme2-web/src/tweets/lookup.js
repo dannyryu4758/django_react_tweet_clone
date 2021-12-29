@@ -13,10 +13,13 @@ export function apiTweeDetail(tweetId, callback) {
   backendLookup("GET", `/tweets/${tweetId}/`, callback);
 }
 
-export function apiTweetList(username, callback) {
+export function apiTweetList(username, callback, nextUrl) {
   let endpoint = "/tweets/";
   if (username) {
     endpoint = `/tweets/?username=${username}`;
+  }
+  if (nextUrl !== null && nextUrl !== undefined) {
+    endpoint = nextUrl.replace("http://localhost:8000/api", "");
   }
   backendLookup("GET", endpoint, callback);
 }
