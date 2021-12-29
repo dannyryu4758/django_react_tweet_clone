@@ -5,6 +5,7 @@ import { Tweet } from "./detail";
 export function TweetsList(props) {
   const [tweetsInit, setTweetsInit] = useState([]);
   const [tweets, setTweets] = useState([]);
+  const [nextUrl, setNextUrl] = useState(null);
   const [tweetsDidSet, setTweetsDidSet] = useState(false);
   useEffect(() => {
     const final = [...props.newTweets].concat(tweetsInit);
@@ -17,7 +18,8 @@ export function TweetsList(props) {
     if (tweetsDidSet === false) {
       const handleTweetListLookup = (response, status) => {
         if (status === 200) {
-          setTweetsInit(response);
+          setNextUrl(response.next);
+          setTweetsInit(response.results);
           setTweetsDidSet(true);
         } else {
           alert("오류가 있습니다.");
@@ -35,14 +37,21 @@ export function TweetsList(props) {
     updateFinalTweets.unshift(tweets);
     setTweets(updateFinalTweets);
   };
-  return tweets.map((item, index) => {
-    return (
-      <Tweet
-        tweet={item}
-        didRetweet={handleDidRetweet}
-        className="my-5 py-5 border bg-white text-dark"
-        key={`${index}-{item.id}`}
-      />
-    );
-  });
+  return (
+    <React.Fragment>
+      {tweets.map((item, index) => {
+        return (
+          <Tweet
+            tweet={item}
+            didRetweet={handleDidRetweet}
+            className="my-5 py-5 border bg-white text-dark"
+            key={`${index}-{item.id}`}
+          />
+        );
+      })}
+      {nextUrl !== null && (
+        <button className="btn btn-outline-primary">Load Next</button>
+      )}
+    </React.Fragment>
+  );
 }
