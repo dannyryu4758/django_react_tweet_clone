@@ -2,6 +2,7 @@ from django.conf import settings
 from rest_framework import serializers
 from rest_framework.decorators import action
 from .models import Tweet, TweetLike
+from profiles.serializers import ProfileSerializer
 
 MAX_TWEET_LENGTH = settings.MAX_TWEET_LENGTH
 TWEET_ACTION_OPTIONS = settings.TWEET_ACTION_OPTIONS
@@ -20,12 +21,15 @@ class TweetActionSerializer(serializers.Serializer):
 
 
 class TweetCreateSerializer(serializers.ModelSerializer):
+    user = ProfileSerializer(source='user.profile', read_only=True) # serializers.SerializerMethodField(read_only=True)
     likes = serializers.SerializerMethodField(read_only=True)
-    content = serializers.CharField()
 
     class Meta:
         model = Tweet
-        fields = ["id", "content", "likes"]
+        fields = ["user", "id", "content", "likes", "timestamp"]
+
+    # def get_user(self, obj) :
+    #     return obj.user.id
 
     def get_likes(self, obj):
         return obj.likes.count()
@@ -36,12 +40,16 @@ class TweetCreateSerializer(serializers.ModelSerializer):
         return value
 
 class TweetSerializer(serializers.ModelSerializer):
+    user = ProfileSerializer(source='user.profile', read_only=True) # user = serializers.SerializerMethodField(read_only=True)
     likes = serializers.SerializerMethodField(read_only=True)
     parent = TweetCreateSerializer(read_only=True)
 
     class Meta:
         model = Tweet
-        fields = ["id", "content", "likes", "is_retweet", "parent"]
+        fields = ["user", "id", "content", "likes", "is_retweet", "parent", "timestamp"]
+
+    # def get_user(self, obj) :
+    #     return obj.user.id
 
     def get_likes(self, obj):
         return obj.likes.count()
