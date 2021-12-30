@@ -2,7 +2,7 @@ from django.conf import settings
 from rest_framework import serializers
 from rest_framework.decorators import action
 from .models import Tweet, TweetLike
-from profiles.serializers import ProfileSerializer
+from profiles.serializers import PublicProfileSerializer
 
 MAX_TWEET_LENGTH = settings.MAX_TWEET_LENGTH
 TWEET_ACTION_OPTIONS = settings.TWEET_ACTION_OPTIONS
@@ -21,7 +21,7 @@ class TweetActionSerializer(serializers.Serializer):
 
 
 class TweetCreateSerializer(serializers.ModelSerializer):
-    user = ProfileSerializer(source='user.profile', read_only=True) # serializers.SerializerMethodField(read_only=True)
+    user = PublicProfileSerializer(source='user.profile', read_only=True) # serializers.SerializerMethodField(read_only=True)
     likes = serializers.SerializerMethodField(read_only=True)
 
     class Meta:
@@ -40,7 +40,7 @@ class TweetCreateSerializer(serializers.ModelSerializer):
         return value
 
 class TweetSerializer(serializers.ModelSerializer):
-    user = ProfileSerializer(source='user.profile', read_only=True) # user = serializers.SerializerMethodField(read_only=True)
+    user = PublicProfileSerializer(source='user.profile', read_only=True) # user = serializers.SerializerMethodField(read_only=True)
     likes = serializers.SerializerMethodField(read_only=True)
     parent = TweetCreateSerializer(read_only=True)
 

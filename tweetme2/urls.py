@@ -39,10 +39,10 @@ urlpatterns = [
     path('login/', login_view),
     path('logout/', logout_view),
     path('register/', register_view),
-    path('<int:tweet_id>/', tweets_detail_view),
-    re_path(r"profiles?/", include('profiles.urls')),
-    path("api/tweets/", include('tweets.api.urls')),
-    re_path(r"api/profiles?/", include('profiles.api.urls')),
+    path('<int:tweet_id>', tweets_detail_view),
+    re_path(r'^profiles?/', include('profiles.urls')),
+    path('api/tweets/', include('tweets.api.urls')),
+    re_path(r'^api/profiles?/', include('profiles.api.urls')),
 ]
 
 if settings.DEBUG :

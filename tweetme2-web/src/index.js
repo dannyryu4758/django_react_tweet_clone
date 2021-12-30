@@ -16,7 +16,7 @@ if (tweetEl) {
   ReactDOM.render(e(TweetsComponent, tweetEl.dataset), tweetEl);
 }
 const tweetFeedEl = document.getElementById("tweetme-2-feed");
-if (tweetEl) {
+if (tweetFeedEl) {
   ReactDOM.render(e(FeedComponent, tweetFeedEl.dataset), tweetFeedEl);
 }
 

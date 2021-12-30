@@ -35,7 +35,6 @@ def profile_update_view(request, *args, **kwargs) :
     return render(request, "profiles/form.html", context)
 
 
-# Create your views here.
 def profile_detail_view(request, username, *args, **kwargs) :
     # get the profile for the passed username
     qs = Profile.objects.filter(user__username=username)
