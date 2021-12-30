@@ -1,5 +1,8 @@
 import React, { useState } from "react";
-import { ActionBtn } from "./button";
+
+import { ActionBtn } from "./buttons";
+
+import { UserDisplay, UserPicture } from "../profiles";
 
 export function ParentTweet(props) {
   const { tweet } = props;
@@ -13,7 +16,6 @@ export function ParentTweet(props) {
     />
   ) : null;
 }
-
 export function Tweet(props) {
   const { tweet, didRetweet, hideActions, isRetweet, retweeter } = props;
   const [actionTweet, setActionTweet] = useState(
@@ -23,11 +25,8 @@ export function Tweet(props) {
   className =
     isRetweet === true ? `${className} p-2 border rounded` : className;
   const path = window.location.pathname;
-  const idRegex = /(?<tweetid>\d+)/;
-  const match = path.match(idRegex);
+  const match = path.match(/(?<tweetid>\d+)/);
   const urlTweetId = match ? match.groups.tweetid : -1;
-  if (match) {
-  }
   const isDetail = `${tweet.id}` === `${urlTweetId}`;
 
   const handleLink = (event) => {
@@ -49,23 +48,21 @@ export function Tweet(props) {
       {isRetweet === true && (
         <div className="mb-2">
           <span className="small text-muted">
-            Retweet via @{retweeter.username}
+            Retweet via <UserDisplay user={retweeter} />
           </span>
         </div>
       )}
       <div className="d-flex">
         <div className="">
-          <span className="mx-1 px-3 py-2 rounded-circle bg-dark text-white">
-            {tweet.user.username[0]}
-          </span>
+          <UserPicture user={tweet.user} />
         </div>
         <div className="col-11">
           <div>
             <p>
-              {tweet.user.first_name} {tweet.user.last_name} @
-              {tweet.user.username}
+              <UserDisplay includeFullName user={tweet.user} />
             </p>
             <p>{tweet.content}</p>
+
             <ParentTweet tweet={tweet} retweeter={tweet.user} />
           </div>
           <div className="btn btn-group px-0">

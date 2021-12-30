@@ -20,7 +20,7 @@ ALLOWED_HOSTS = settings.ALLOWED_HOSTS
 # def user_profile_detail_view(request, username, *args, **kwargs):
 #     current_user = request.user
 #     to_follow_user = ??
-#     return Response({}, status=400)
+#     return Response({}, status=200)
 
 @api_view(['GET', 'POST'])
 @permission_classes([IsAuthenticated]) 

@@ -1,19 +1,18 @@
-import React, { useState, useEffect } from "react";
-import { TweetsList } from "./list";
+import React, { useEffect, useState } from "react";
+
 import { TweetCreate } from "./create";
-import { apiTweeDetail } from "./lookup";
 import { Tweet } from "./detail";
+import { apiTweetDetail } from "./lookup";
+import { TweetsList } from "./list";
 
 export function TweetsComponent(props) {
   const [newTweets, setNewTweets] = useState([]);
   const canTweet = props.canTweet === "false" ? false : true;
-  console.log(canTweet === false);
   const handleNewTweet = (newTweet) => {
     let tempNewTweets = [...newTweets];
     tempNewTweets.unshift(newTweet);
     setNewTweets(tempNewTweets);
   };
-
   return (
     <div className={props.className}>
       {canTweet === true && (
@@ -28,19 +27,21 @@ export function TweetDetailComponent(props) {
   const { tweetId } = props;
   const [didLookup, setDidLookup] = useState(false);
   const [tweet, setTweet] = useState(null);
+
   const handleBackendLookup = (response, status) => {
     if (status === 200) {
       setTweet(response);
     } else {
-      alert("해당 트윗을 찾는 도중 오류가 발생하였습니다.");
+      alert("There was an error finding your tweet.");
     }
   };
   useEffect(() => {
     if (didLookup === false) {
-      apiTweeDetail(tweetId, handleBackendLookup);
+      apiTweetDetail(tweetId, handleBackendLookup);
       setDidLookup(true);
     }
   }, [tweetId, didLookup, setDidLookup]);
+
   return tweet === null ? null : (
     <Tweet tweet={tweet} className={props.className} />
   );
