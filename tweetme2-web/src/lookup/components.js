@@ -39,7 +39,9 @@ export function backendLookup(method, endpoint, callback, data) {
         detail ===
         "자격 인증데이터(authentication credentials)가 제공되지 않았습니다."
       ) {
-        window.location.href = "/login?showLoginRequired=true";
+        if (window.location.href.indexOf("login") === -1) {
+          window.location.href = "/login?showLoginRequired=true";
+        }
       }
     }
     callback(xhr.response, xhr.status);
